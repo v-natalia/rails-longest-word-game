@@ -1,4 +1,7 @@
 # '# frozen_string_literal: true'
+require 'open-uri'
+require 'json'
+
 class GamesController < ApplicationController
   def index
     @word = params[:longest_word]
@@ -21,18 +24,19 @@ class GamesController < ApplicationController
       if @letters.include?(letter) && @word.count(letter) <= @letters.count(letter)
         i = @word.index(letter)
         arr << @word[i]
+      else
+      "Sorry but #{@word.upcase} can't be built of #{@letters}"
       end
     end
       arr.sort == @word.sort ? @score = true : @score = false
     raise
       # API
-      # url = 'https://wagon-dictionary.herokuapp.com/{word}'
-      # .found == true? "Congratulations! #{@word.upcase} is a valid English word!"
-      #
-      # .found == false? "Sorry but #{@word.upcase} does not seem to be a valid English word"
+      url = 'https://wagon-dictionary.herokuapp.com/{word}'
+      dictionary = open(url.read)
+      dict = JSON.parse(File.dictionary)
+      dict.found == true? "Congratulations! #{@word.upcase} is a valid English word!"
+      dict.found == false? "Sorry but #{@word.upcase} does not seem to be a valid English word"
 
-    # else
-    #   "Sorry but #{@word.upcase} can't be built of #{@letters}"
-    # end
   end
 end
+
